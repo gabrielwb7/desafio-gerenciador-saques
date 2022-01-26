@@ -2,8 +2,10 @@ package com.desafio.managerwithdraws.controller;
 
 import com.desafio.managerwithdraws.services.WithdrawServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/withdrawals")
@@ -14,18 +16,7 @@ public class WithdrawController {
 
     @GetMapping(value = "/{id}")
     public Integer getWithdrawls(@PathVariable Long id) {
-        return withdrawServices.getWithdraws(Long.toString(id));
+      return withdrawServices.getWithdraws(Long.toString(id));
     }
 
-    @PostMapping(value = "/v1/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void setWithdrawls(@PathVariable Long id) {
-        String key = Long.toString(id);
-        withdrawServices.setWithdraws(key);
-    }
-
-    @PutMapping("/{idAccount}")
-    public void incrementWithdraws(@PathVariable Long idAccount) {
-        withdrawServices.incrementWithdraws(Long.toString(idAccount));
-    }
 }
