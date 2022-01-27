@@ -2,8 +2,6 @@ package com.desafio.managerwithdraws.controller;
 
 import com.desafio.managerwithdraws.services.WithdrawServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,9 +12,16 @@ public class WithdrawController {
     @Autowired
     private WithdrawServices withdrawServices;
 
-    @GetMapping(value = "/{id}")
-    public Integer getWithdrawls(@PathVariable Long id) {
-      return withdrawServices.getWithdraws(Long.toString(id));
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Withdraw>> withdrawList() {
+//        return ResponseEntity.ok().body(withdrawServices.withdrawList());
+//    }
+//
+//    @GetMapping(value = "/{id}")
+//    public ResponseEntity<Withdraw> accountById(@RequestParam Long id) {
+//        return ResponseEntity.ok().body(withdrawServices.withdrawById(id));
+//
 
 }
+
+

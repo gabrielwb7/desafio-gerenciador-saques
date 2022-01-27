@@ -3,30 +3,19 @@ package com.desafio.managerwithdraws.services;
 import com.desafio.managerwithdraws.entities.Withdraw;
 import com.google.gson.Gson;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 @Service
 public class WithdrawServices {
 
-    Jedis jedis = new Jedis();
+    private final Jedis jedis = new Jedis();
+    private final Gson gson = new Gson();
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
-//    private final KafkaTemplate<String, String> kafkaTemplate;
-//
-    private Gson gson = new Gson();
-
-//    public WithdrawServices(KafkaTemplate<String, String> kafkaTemplate) {
-//        this.kafkaTemplate = kafkaTemplate;
-//    }
-
-//    public void getWithdraws(Long key) {
-//        Withdraw withdraw = new Withdraw(key, jedis.get(String.valueOf(key)));
-//        kafkaTemplate.send("new-withdraw", gson.toJson(withdraw));
-//    }
-
-    public Integer getWithdraws(String key) {
-        Integer test = Integer.parseInt(jedis.get(key));
-        return test;
+    public WithdrawServices(KafkaTemplate<String, String> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @KafkaListener(topics = "newAccount", groupId = "group-id")
@@ -38,7 +27,7 @@ public class WithdrawServices {
     }
 
     @KafkaListener(topics = "newWithdraw", groupId = "group-id")
-    private void incrementWithdraws(String newWithdraw) {
+    private void updateFreeWithdraws(String newWithdraw) {
         int oldWithdraw = Integer.parseInt(jedis.get(newWithdraw));
         int updateWithdraw = oldWithdraw - 1;
         jedis.set(newWithdraw, Integer.toString(updateWithdraw));
