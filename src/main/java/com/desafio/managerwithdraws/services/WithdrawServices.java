@@ -2,6 +2,7 @@ package com.desafio.managerwithdraws.services;
 
 import com.desafio.managerwithdraws.entities.Account;
 import com.desafio.managerwithdraws.entities.Withdraw;
+import com.desafio.managerwithdraws.repositories.AccountRepository;
 import com.desafio.managerwithdraws.repositories.WithdrawRepositories;
 import com.desafio.managerwithdraws.services.exceptions.WithdrawNotFound;
 import com.google.gson.Gson;
@@ -19,10 +20,12 @@ public class WithdrawServices {
     private final Gson gson = new Gson();
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final WithdrawRepositories withdrawRepositories;
+    private final AccountRepository accountRepository;
 
-    public WithdrawServices(KafkaTemplate<String, String> kafkaTemplate, WithdrawRepositories withdrawRepositories) {
+    public WithdrawServices(KafkaTemplate<String, String> kafkaTemplate, WithdrawRepositories withdrawRepositories, AccountRepository accountRepository) {
         this.kafkaTemplate = kafkaTemplate;
         this.withdrawRepositories = withdrawRepositories;
+        this.accountRepository = accountRepository;
     }
 
     public List<Withdraw> listAll() {
@@ -40,12 +43,14 @@ public class WithdrawServices {
         return withdraw;
     }
 
-
     @KafkaListener(topics = "newAccount", groupId = "group-id")
     private void setWithdraws(String data) {
+
         Account account = gson.fromJson(data, Account.class);
+        accountRepository.save(account);
+
         String key = Long.toString(account.getId());
-        String limit = Integer.toString(account.getLimit());
+        String limit = Integer.toString(account.getLimitWithdraw());
         jedis.set(key, limit);
     }
 
@@ -58,9 +63,17 @@ public class WithdrawServices {
         int oldWithdraw = Integer.parseInt(jedis.get(Long.toString(withdraw.getIdAccount())));
         int updateWithdraw = oldWithdraw - 1;
         jedis.set(Long.toString(withdraw.getIdAccount()), Integer.toString(updateWithdraw));
+
+        updateAccount(withdraw.getIdAccount());
     }
 
     private Withdraw idIsExist(Long id) {
         return withdrawRepositories.findById(id).orElseThrow(() -> new WithdrawNotFound("O saque com o " + id +" não existe"));
+    }
+
+    private void updateAccount(Long id) {
+        Account account = accountRepository.getById(id);
+        account.setWithdrawalsMade(account.getWithdrawalsMade() + 1);
+        accountRepository.save(account);
     }
 }

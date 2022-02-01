@@ -1,17 +1,26 @@
 package com.desafio.managerwithdraws.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 @Data
+@Entity
+@Table
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account {
 
+    @Id
     private Long id;
-    private int limit;
+    @Column
+    private Integer limitWithdraw;
+    @Column
+    private Integer withdrawalsMade = 0;
 
-    public Account(Long id, int limit) {
-        this.id = id;
-        this.limit = limit;
-    }
 }
