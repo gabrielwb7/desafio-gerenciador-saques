@@ -39,7 +39,5 @@ public class RestartWithdrawFree {
                 jedis.set(key,value);
             }
         }
-
     }
-
 }

@@ -59,16 +59,17 @@ public class WithdrawServices {
 
         Withdraw withdraw = gson.fromJson(data, Withdraw.class);
         withdrawRepositories.save(withdraw);
-
         int oldWithdraw = Integer.parseInt(jedis.get(Long.toString(withdraw.getIdAccount())));
-        int updateWithdraw = oldWithdraw - 1;
-        jedis.set(Long.toString(withdraw.getIdAccount()), Integer.toString(updateWithdraw));
 
+        if (oldWithdraw != 0) {
+            int updateWithdraw = oldWithdraw - 1;
+            jedis.set(Long.toString(withdraw.getIdAccount()), Integer.toString(updateWithdraw));
+        }
         updateAccount(withdraw.getIdAccount());
     }
 
     private Withdraw idIsExist(Long id) {
-        return withdrawRepositories.findById(id).orElseThrow(() -> new WithdrawNotFound("O saque com o " + id +" não existe"));
+        return withdrawRepositories.findById(id).orElseThrow(() -> new WithdrawNotFound("O saque com o id " + id +" não existe"));
     }
 
     private void updateAccount(Long id) {

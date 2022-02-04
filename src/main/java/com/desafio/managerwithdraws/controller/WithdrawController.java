@@ -23,12 +23,12 @@ public class WithdrawController {
         return ResponseEntity.ok().body(withdrawServices.listAll());
     }
 
-    @GetMapping(value = "/withdraws")
+    @GetMapping(value = "/account")
     public ResponseEntity<List<Withdraw>> withdrawByAccount(@RequestParam Long idAccount) {
         return ResponseEntity.ok().body(withdrawServices.withdrawByAccount(idAccount));
     }
 
-    @GetMapping(value = "/v1")
+    @GetMapping(value = "/search")
     public ResponseEntity<Withdraw> withdrawById(@RequestParam Long idWithdraw) {
         return ResponseEntity.ok().body(withdrawServices.withdrawById(idWithdraw));
     }
