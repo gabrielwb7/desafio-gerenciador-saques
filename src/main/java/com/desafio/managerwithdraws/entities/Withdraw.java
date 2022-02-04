@@ -26,9 +26,13 @@ public class Withdraw {
     @Column(nullable = false)
     private String date;
 
-    public Withdraw(Long idAccount, double amount, String date) {
+    @Column(nullable = false)
+    private String tax;
+
+    public Withdraw(Long idAccount, double amount, String date, String tax) {
         this.idAccount = idAccount;
         this.amount = String.valueOf(amount);
         this.date = date;
+        this.tax = tax;
     }
 }

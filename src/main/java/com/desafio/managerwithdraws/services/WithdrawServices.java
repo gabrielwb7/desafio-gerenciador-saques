@@ -56,7 +56,6 @@ public class WithdrawServices {
 
     @KafkaListener(topics = "newWithdraw", groupId = "group-id")
     private void updateFreeWithdraws(String data) {
-
         Withdraw withdraw = gson.fromJson(data, Withdraw.class);
         withdrawRepositories.save(withdraw);
         int oldWithdraw = Integer.parseInt(jedis.get(Long.toString(withdraw.getIdAccount())));
