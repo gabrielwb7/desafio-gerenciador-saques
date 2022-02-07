@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class WithdrawServices {
@@ -36,11 +37,8 @@ public class WithdrawServices {
         return withdrawRepositories.findByIdAccount(id);
     }
 
-
     public Withdraw withdrawById(Long idWithdraw) {
-        idIsExist(idWithdraw);
-        Withdraw withdraw = withdrawRepositories.findById(idWithdraw).get();
-        return withdraw;
+        return idIsExist(idWithdraw);
     }
 
     @KafkaListener(topics = "newAccount", groupId = "group-id")

@@ -29,10 +29,10 @@ public class Withdraw {
     @Column(nullable = false)
     private String tax;
 
-    public Withdraw(Long idAccount, double amount, String date, String tax) {
+    public Withdraw(Long idAccount, Double amount, String date, Double tax) {
         this.idAccount = idAccount;
         this.amount = String.valueOf(amount);
         this.date = date;
-        this.tax = tax;
+        this.tax = String.valueOf(tax);
     }
 }
