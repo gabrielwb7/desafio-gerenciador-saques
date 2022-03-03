@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class WithdrawServices {
@@ -41,7 +40,7 @@ public class WithdrawServices {
         return idIsExist(idWithdraw);
     }
 
-    @KafkaListener(topics = "newAccount", groupId = "group-id")
+    @KafkaListener(topics = "NEW_ACCOUNT", groupId = "group-id")
     private void setWithdraws(String data) {
 
         Account account = gson.fromJson(data, Account.class);
@@ -52,7 +51,7 @@ public class WithdrawServices {
         jedis.set(key, limit);
     }
 
-    @KafkaListener(topics = "newWithdraw", groupId = "group-id")
+    @KafkaListener(topics = "NEW_WITHDRAW", groupId = "group-id")
     private void updateFreeWithdraws(String data) {
         Withdraw withdraw = gson.fromJson(data, Withdraw.class);
         withdrawRepositories.save(withdraw);
